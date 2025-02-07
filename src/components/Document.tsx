@@ -12,7 +12,7 @@ import DeleteDocument from './DeleteDocument';
 import InviteUser from './InviteUser';
 import { useOthers, useRoom } from '@liveblocks/react/suspense';
 import ManageUsers from './ManageUsers';
-
+import Avatars from './Avatars';
 
 interface RoomUser {
     email: string;
@@ -100,7 +100,7 @@ function Document({ id }: { id: string }) {
             <div className='flex max-w-6xl mx-auto items-center gap-2 justify-between mb-5'>
             <ManageUsers/>
 
-            
+            <Avatars/>
             </div>
 
             <hr className='pb-10 my-2' />
