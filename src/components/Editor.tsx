@@ -1,11 +1,8 @@
-"use client";
-
 import { useRoom } from '@liveblocks/react/suspense';
 import React, { useEffect, useState } from 'react';
-
 import * as Y from 'yjs';
 import { LiveblocksYjsProvider } from '@liveblocks/yjs';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, Share2Icon } from 'lucide-react';
 import { Button } from './ui/button';
 import { BlockNoteView } from '@blocknote/shadcn';
 import { BlockNoteEditor } from '@blocknote/core';
@@ -52,17 +49,33 @@ function Editor() {
   const [doc, setDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<LiveblocksYjsProvider>();
   const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [documentUrl, setDocumentUrl] = useState<string>('');
 
   useEffect(() => {
     const yDoc = new Y.Doc();
     const yProvider = new LiveblocksYjsProvider(room, yDoc);
     setDoc(yDoc);
     setProvider(yProvider);
+
+    // Set the document URL using the room ID
+    setDocumentUrl(`${window.location.origin}/documents/${room.id}`);
+
     return () => {
       yDoc?.destroy();
       yProvider?.destroy();
     };
   }, [room]);
+
+  const handlePublish = async () => {
+    try {
+      await navigator.clipboard.writeText(documentUrl);
+      // You might want to add a toast notification here
+      alert('Document URL copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      alert('Failed to copy URL. Please try again.');
+    }
+  };
 
   if (!doc || !provider) return null;
 
@@ -75,10 +88,21 @@ function Editor() {
   return (
     <div className='max-w-6xl mx-auto'>
       <div className='flex items-center gap-2 justify-end mb-10'>
-        {/*Transalte document */}
+        {/*Translate document */}
         {/*Chat box AI*/}
+        {/*Publish Button*/}
+        <Button 
+          className={style}
+          onClick={handlePublish}
+          title="Copy document URL"
+        >
+          <Share2Icon className="w-4 h-4" />
+        </Button>
         {/*Dark Mode*/}
-        <Button className={style} onClick={() => setDarkMode(!darkMode)}>
+        <Button 
+          className={style} 
+          onClick={() => setDarkMode(!darkMode)}
+        >
           {darkMode ? <SunIcon /> : <MoonIcon />}
         </Button>
       </div>
