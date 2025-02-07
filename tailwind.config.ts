@@ -12,6 +12,15 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			animation: {
+				'spin-reverse': 'spin-reverse 2s linear infinite',
+			  },
+			  keyframes: {
+				'spin-reverse': {
+				  '0%': { transform: 'rotate(0deg)' },
+				  '100%': { transform: 'rotate(-360deg)' },
+				}
+			  },
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
