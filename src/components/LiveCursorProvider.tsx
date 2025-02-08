@@ -1,4 +1,3 @@
-// LiveCursorProvider.tsx
 "use client";
 
 import React from 'react';
@@ -8,8 +7,16 @@ import FollowPointer from './FollowPointer';
 
 function LiveCursorProvider({ children }: { children: React.ReactNode }) {
     const room = useRoom();
-    const [_myPresence, updateMyPresence] = useMyPresence();
+    const [myPresence, updateMyPresence] = useMyPresence();
     const others = useOthers();
+
+    // Temporary development-only logging
+    React.useEffect(() => {
+        if (process.env.NODE_ENV === 'development') {
+            // Log presence changes for debugging
+            console.log('Current presence state:', myPresence);
+        }
+    }, [myPresence]);
 
     const handlePointerMove = React.useCallback((e: PointerEvent<HTMLDivElement>) => {
         const cursor = { x: Math.floor(e.pageX), y: Math.floor(e.pageY) };
@@ -20,7 +27,6 @@ function LiveCursorProvider({ children }: { children: React.ReactNode }) {
         updateMyPresence({ cursor: null });
     }, [updateMyPresence]);
 
-    // Log connection status
     React.useEffect(() => {
         console.log('Room connection status:', room.getStatus());
         

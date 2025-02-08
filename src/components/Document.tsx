@@ -23,9 +23,8 @@ function Document({ id }: { id: string }) {
     const [input, setInput] = useState("");
     const [isPending, startTransition] = useTransition();
     const [data, loading, error] = useDocumentData(doc(db, "documents", id));
-    const [_roomUsers, setRoomUsers] = useState<RoomUser[]>([]);
+    const [roomUsers, setRoomUsers] = useState<RoomUser[]>([]);
     const isOwner = useOwner();
-
 
     // Listen for room users
     useEffect(() => {
@@ -50,6 +49,18 @@ function Document({ id }: { id: string }) {
             setInput(data.title);
         }
     }, [data]);
+
+    // Temporary usage of roomUsers for development/debugging
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'development') {
+            console.log('Current room users:', roomUsers);
+        }
+    }, [roomUsers]);
+
+    /* Future implementation plans:
+    const getRoomUsersCount = () => roomUsers.length;
+    const getActiveUsers = () => roomUsers.filter(user => user.active);
+    */
 
     const updateTitle = async (e: FormEvent) => {
         e.preventDefault();
@@ -96,9 +107,8 @@ function Document({ id }: { id: string }) {
             </div>
 
             <div className='flex max-w-6xl mx-auto items-center gap-2 justify-between mb-5'>
-            <ManageUsers/>
-
-            <Avatars/>
+                <ManageUsers/>
+                <Avatars/>
             </div>
 
             <hr className='pb-10 my-2' />

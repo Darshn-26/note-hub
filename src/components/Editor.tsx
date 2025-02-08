@@ -12,15 +12,31 @@ import "@blocknote/shadcn/style.css";
 import { useSelf } from '@liveblocks/react';
 import stringToColor from '@/lib/stringToColor';
 
+// Temporary type for development
+type LiveblocksProvider = {
+  destroy: () => void;
+  // Add other provider properties as needed
+  [key: string]: any; // This is temporary for development
+};
+
 type EditorProps = {
   doc: Y.Doc;
-  provider: any;
+  provider: LiveblocksProvider;
   darkMode: boolean;
 }
 
 function BlockNote({ doc, provider, darkMode }: EditorProps) {
   const userInfo = useSelf((me) => me.info);
-  const userName = userInfo?.name! || 'Anonymous';
+  // Temporary development-only validation
+  const getUserName = (info: typeof userInfo) => {
+    if (process.env.NODE_ENV === 'development') {
+      // Log the user info for debugging
+      console.log('Current user info:', info);
+    }
+    return info?.name || 'Anonymous';
+  };
+  
+  const userName = getUserName(userInfo);
   
   const editor: BlockNoteEditor = useCreateBlockNote({
     collaboration: {
@@ -47,7 +63,7 @@ function BlockNote({ doc, provider, darkMode }: EditorProps) {
 function Editor() {
   const room = useRoom();
   const [doc, setDoc] = useState<Y.Doc>();
-  const [provider, setProvider] = useState<LiveblocksYjsProvider>();
+  const [provider, setProvider] = useState<LiveblocksProvider>();
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [documentUrl, setDocumentUrl] = useState<string>('');
 
