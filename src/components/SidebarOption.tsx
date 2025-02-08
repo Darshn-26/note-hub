@@ -9,7 +9,7 @@ function SidebarOption({href, id}: {
     href: string;
     id: string;
 }) {
-const [data, loading, error] = useDocumentData(doc(db, "documents", id));
+const [data] = useDocumentData(doc(db, "documents", id));
 const pathname = usePathname();
 const isActive = href.includes (pathname) && pathname !== "/";
 if (!data) return null;

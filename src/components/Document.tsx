@@ -10,7 +10,6 @@ import Editor from './Editor';
 import useOwner from '@/lib/useOwner';
 import DeleteDocument from './DeleteDocument';
 import InviteUser from './InviteUser';
-import { useOthers, useRoom } from '@liveblocks/react/suspense';
 import ManageUsers from './ManageUsers';
 import Avatars from './Avatars';
 
@@ -24,10 +23,9 @@ function Document({ id }: { id: string }) {
     const [input, setInput] = useState("");
     const [isPending, startTransition] = useTransition();
     const [data, loading, error] = useDocumentData(doc(db, "documents", id));
-    const [roomUsers, setRoomUsers] = useState<RoomUser[]>([]);
+    const [_roomUsers, setRoomUsers] = useState<RoomUser[]>([]);
     const isOwner = useOwner();
-    const others = useOthers();
-    const room = useRoom();
+
 
     // Listen for room users
     useEffect(() => {

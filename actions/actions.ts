@@ -89,7 +89,7 @@ export async function adduser(roomId:string,email:string) {
 }
 
 export async function removeuser(roomId:string,email:string) {
-    //auth();
+    // Auth().Protect();
     console.log("Removing user",email);
 
     try{

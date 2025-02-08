@@ -8,7 +8,7 @@ import FollowPointer from './FollowPointer';
 
 function LiveCursorProvider({ children }: { children: React.ReactNode }) {
     const room = useRoom();
-    const [myPresence, updateMyPresence] = useMyPresence();
+    const [_myPresence, updateMyPresence] = useMyPresence();
     const others = useOthers();
 
     const handlePointerMove = React.useCallback((e: PointerEvent<HTMLDivElement>) => {

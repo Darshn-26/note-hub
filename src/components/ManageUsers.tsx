@@ -1,19 +1,16 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { usePathname, useRouter } from "next/navigation";
-import { adduser, removeuser } from "../../actions/actions";
+import { removeuser } from "../../actions/actions";
 import { toast } from "sonner";
-import { Input } from "./ui/input";
 import { useRoom } from "@liveblocks/react/suspense";
 import { useUser } from "@clerk/nextjs";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -26,7 +23,6 @@ function ManageUsers() {
  const isOwner=useOwner();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
-  const [email, setEmail] = React.useState("");
   const room = useRoom();
 
   const [userInRoom]=useCollection(

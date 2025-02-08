@@ -79,11 +79,9 @@ function Editor() {
 
   if (!doc || !provider) return null;
 
-  const style = `hover:text-white${
-    darkMode
-      ? "test-gray-300 bg-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-      : "text-gray-700 bg-black text-white hover:bg-gray-300 hover:text-gray-700"
-  }`;
+  const style = darkMode
+    ? "text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white"
+    : "text-gray-700 bg-white hover:bg-gray-100 hover:text-gray-900";
 
   return (
     <div className='max-w-6xl mx-auto'>
@@ -103,7 +101,7 @@ function Editor() {
           className={style} 
           onClick={() => setDarkMode(!darkMode)}
         >
-          {darkMode ? <SunIcon /> : <MoonIcon />}
+          {darkMode ? <SunIcon className="w-4 h-4" /> : <MoonIcon className="w-4 h-4" />}
         </Button>
       </div>
       {/*Editor Note*/}
