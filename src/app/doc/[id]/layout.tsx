@@ -3,18 +3,20 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from 'next/navigation';
 import RoomProvider from '@/components/RoomProvider';
 
-// Define the proper Layout Props type
-interface LayoutProps {
+// Update the type to match Next.js layout props structure
+type LayoutProps = {
   children: React.ReactNode;
-  params: { id: string }
+  params: {
+    id: string;
+  };
 }
 
-async function DocLayout({
+const DocLayout = async ({
   children,
   params,
-}: LayoutProps) {
+}: LayoutProps) => {
   const { userId } = await auth();
-
+  
   if (!userId) {
     redirect('/sign-in');
   }
