@@ -35,7 +35,17 @@ function InviteUser() {
       if (success) {
         setIsOpen(false);
         setEmail("");
-        toast.success("User added to the room successfully.");
+        toast.success("User added to the room successfully.",{
+          description: 'Document title has been updated successfully',
+          position: 'top-center',
+          duration: 3000,
+          style: {
+            background: 'linear-gradient(90deg, #FFC0CB, #C51077, #8B0A1A)',
+            color: '#FFFFFF',
+            border: '2px solid linear-gradient(90deg, #FFC0CB, #C51077, #8B0A1A)',
+          },
+                        
+        });
         
         // Properly subscribe to presence updates
         room.subscribe("my-presence", (presence) => {

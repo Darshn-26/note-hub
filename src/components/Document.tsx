@@ -12,6 +12,7 @@ import DeleteDocument from './DeleteDocument';
 import InviteUser from './InviteUser';
 import ManageUsers from './ManageUsers';
 import Avatars from './Avatars';
+import { toast } from 'sonner';
 
 interface RoomUser {
     email: string;
@@ -26,7 +27,6 @@ function Document({ id }: { id: string }) {
     const [roomUsers, setRoomUsers] = useState<RoomUser[]>([]);
     const isOwner = useOwner();
 
-    // Listen for room users
     useEffect(() => {
         const q = query(
             collection(db, "users"),
@@ -50,17 +50,11 @@ function Document({ id }: { id: string }) {
         }
     }, [data]);
 
-    // Temporary usage of roomUsers for development/debugging
     useEffect(() => {
         if (process.env.NODE_ENV === 'development') {
             console.log('Current room users:', roomUsers);
         }
     }, [roomUsers]);
-
-    /* Future implementation plans:
-    const getRoomUsersCount = () => roomUsers.length;
-    const getActiveUsers = () => roomUsers.filter(user => user.active);
-    */
 
     const updateTitle = async (e: FormEvent) => {
         e.preventDefault();
@@ -69,8 +63,26 @@ function Document({ id }: { id: string }) {
             startTransition(() => {
                 updateDoc(doc(db, "documents", id), {
                     title: input,
-                }).catch(error => {
+                })
+                .then(() => {
+                    toast.success('Title Updated', {
+                        description: 'Document title has been updated successfully',
+                        position: 'top-center',
+                        duration: 3000,
+                        style: {
+                            background: '#22c55e',
+                            color: '#ffffff',
+                            border: 'none'
+                        },
+                    });
+                })
+                .catch(error => {
                     console.error("Error updating document:", error);
+                    toast.error('Update Failed', {
+                        description: 'Failed to update document title',
+                        position: 'top-center',
+                        duration: 5000,
+                    });
                 });
             });
         }

@@ -32,9 +32,25 @@ function DeleteDocument() {
             if(sucess){
                 setIsopen(false);
                 router.replace("/");
-                toast.success("Document deleted successfully");
+                toast.success("Document deleted successfully", {
+                  position: 'top-center',
+                  duration: 3000,
+                  style: {
+                      background: '#22c55e',
+                      color: '#ffffff',
+                      border: 'none'
+                  },
+              });
             }else{
-                toast.error("Error deleting document");
+                toast.error("Error deleting document", {
+                  position: 'top-center',
+                  duration: 3000,
+                  style: {
+                      background: '#22c55e',
+                      color: '#ffffff',
+                      border: 'none'
+                  },
+              });
             }
         })
     }

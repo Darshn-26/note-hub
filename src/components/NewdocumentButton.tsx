@@ -4,23 +4,64 @@ import { useRouter } from "next/navigation";
 import { Button } from './ui/button';
 import { useTransition } from 'react';
 import { createNewDocument } from '../../actions/actions';
+import { toast } from 'sonner';
 
-function NewdocumentButton() {
-  const[ispending,startTransition]=useTransition();//using react transition as hook 
-  const router=useRouter();
-  //start transition means ? 
-  //React transitions help create smooth visual changes when components mount, update, or unmount. There are several ways to handle transitions in React:
-  const handleCreateNewDocument =() =>{
-    startTransition(async()=>{
-    const { docId }=await createNewDocument();
-    router.push(`/doc/${docId}`);
-  });
-  }
+function NewDocumentButton() {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleCreateNewDocument = () => {
+    startTransition(async () => {
+      try {
+        const response = await createNewDocument();
+        
+        if (!response || !response.docId) {
+          toast.error('Authentication Required', {
+            description: 'Please sign in to create a new document',
+            position: 'top-center',
+            duration: 5000,
+            style: {
+              background: '#ffffff',
+              color: '#FF0000',
+              border: '2px solid #FF0000',
+            },
+          });
+          return;
+        }
+
+        // Success toast when document is created
+        toast.success('Document Created', {
+          description: 'Redirecting to your new document...',
+          position: 'top-center',
+          duration: 3500,
+          style: {
+            background: '#ffffff',
+            color: '#22c55e',
+            border: '2px solid #22c55e',
+          },
+        });
+
+        router.push(`/doc/${response.docId}`);
+      } catch (error) {
+        toast.error('Authentication Required', {
+          description: 'Please sign in to create a new document',
+          position: 'top-center',
+          duration: 5000,
+          style: {
+            background: '#ffffff',
+            color: '#FF0000',
+            border: '2px solid #FF0000',
+          },
+        });
+      }
+    });
+  };
+
   return (
-    <Button onClick={handleCreateNewDocument} disabled={ispending}>
-      {ispending? "Creating..":"New Document"}
+    <Button onClick={handleCreateNewDocument} disabled={isPending}>
+      {isPending ? "Creating..." : "New Document"}
     </Button>
   );
 }
 
-export default NewdocumentButton
+export default NewDocumentButton;
