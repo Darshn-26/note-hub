@@ -67,7 +67,6 @@ function Document({ id }: { id: string }) {
                 })
                 .then(() => {
                     toast.success('Title Updated', {
-                        description: 'Document title has been updated successfully',
                         position: 'top-center',
                         duration: 3000,
                         style: {

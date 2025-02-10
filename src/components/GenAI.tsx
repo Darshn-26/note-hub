@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, Send, X } from 'lucide-react';
+import { MessageCircle, Send, X, Copy, CheckCircle } from 'lucide-react';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -14,6 +14,7 @@ const GenAI = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [copiedMessageIndex, setCopiedMessageIndex] = useState<number | null>(null);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -71,6 +72,81 @@ const GenAI = () => {
     }
   };
 
+  const handleCopyMessage = (message: string, index: number) => {
+    navigator.clipboard.writeText(message);
+    setCopiedMessageIndex(index);
+    
+    // Reset copied state after 2 seconds
+    setTimeout(() => {
+      setCopiedMessageIndex(null);
+    }, 2000);
+  };
+
+  const renderMessageContent = (message: string) => {
+    // Check if the message contains a markdown table or list
+    const isTable = message.includes('|') && message.split('\n').some(line => line.includes('|'));
+    const isList = message.split('\n').some(line => /^[\*\-\d\.]\s/.test(line.trim()));
+
+    if (isTable) {
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-200">
+            {message.split('\n').map((row, rowIndex) => {
+              const cells = row.split('|').map(cell => cell.trim()).filter(Boolean);
+              
+              if (rowIndex === 1) return null; // Skip separator row
+
+              return (
+                <tr key={rowIndex} className={rowIndex === 0 ? 'bg-gray-100 font-bold' : ''}>
+                  {cells.map((cell, cellIndex) => (
+                    <td 
+                      key={cellIndex} 
+                      className="border border-gray-200 p-2"
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </table>
+        </div>
+      );
+    }
+
+    if (isList) {
+      const listType = message.split('\n')[0].trim().match(/^[\*\-\d\.]/)?.[0];
+      
+      return (
+        <div>
+          {listType === '*' || listType === '-' ? (
+            <ul className="list-disc pl-5">
+              {message.split('\n').map((item, index) => (
+                item.trim() && (
+                  <li key={index} className="mb-1">
+                    {item.replace(/^[\*\-]\s*/, '')}
+                  </li>
+                )
+              ))}
+            </ul>
+          ) : (
+            <ol className="list-decimal pl-5">
+              {message.split('\n').map((item, index) => (
+                item.trim() && (
+                  <li key={index} className="mb-1">
+                    {item.replace(/^\d+\.\s*/, '')}
+                  </li>
+                )
+              ))}
+            </ol>
+          )}
+        </div>
+      );
+    }
+
+    return message;
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {!isOpen && (
@@ -101,16 +177,29 @@ const GenAI = () => {
                 key={index}
                 className={`flex ${
                   message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                } relative`}
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-2 ${
                     message.role === 'user'
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted'
-                  }`}
+                  } relative pr-10`}
                 >
-                  {message.content}
+                  {renderMessageContent(message.content)}
+                  
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-0 right-0 hover:bg-transparent"
+                    onClick={() => handleCopyMessage(message.content, index)}
+                  >
+                    {copiedMessageIndex === index ? (
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4 opacity-50 hover:opacity-100" />
+                    )}
+                  </Button>
                 </div>
               </div>
             ))}
