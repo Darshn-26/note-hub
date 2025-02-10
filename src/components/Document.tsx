@@ -13,6 +13,7 @@ import InviteUser from './InviteUser';
 import ManageUsers from './ManageUsers';
 import Avatars from './Avatars';
 import { toast } from 'sonner';
+import GenAI from './GenAI';
 
 interface RoomUser {
     email: string;
@@ -126,6 +127,7 @@ function Document({ id }: { id: string }) {
             <hr className='pb-10 my-2' />
 
             <Editor />
+            <GenAI/>
         </div>
     );
 }

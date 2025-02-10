@@ -55,6 +55,30 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%
   }
+  .prose pre {
+    @apply bg-muted rounded-lg p-4 my-2;
+  }
+  
+  .prose table {
+    @apply w-full border-collapse;
+  }
+  
+  .prose th,
+  .prose td {
+    @apply border border-border p-2;
+  }
+  
+  .prose thead {
+    @apply bg-muted;
+  }
+  
+  .prose code {
+    @apply text-sm;
+  }
+  
+  .prose blockquote {
+    @apply my-4;
+  }
 }
 @layer base {
   * {
