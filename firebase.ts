@@ -7,12 +7,12 @@ import { getApps, getApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBHSv2DB67g7I6ApjJdmRZlNp-qCA5XwHg",
+  apiKey: process.env.apikey,
   authDomain: "note-hub-afbf7.firebaseapp.com",
   projectId: "note-hub-afbf7",
   storageBucket: "note-hub-afbf7.firebasestorage.app",
-  messagingSenderId: "796090997779",
-  appId: "1:796090997779:web:3e9ab463b256eb604033e6"
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appID
 };
 
 // Initialize Firebase
